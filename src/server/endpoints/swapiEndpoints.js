@@ -1,36 +1,54 @@
+const BadRequestException = require("../../common/exceptions/badRequestException");
+const responseParserHandler = require("../handlers/responseParserHandler");
+const httpStatusCodesConstants = require("../../common/constants/httpStatusCodesConstants");
 
-const _isWookieeFormat = (req) => {
-    if(req.query.format && req.query.format == 'wookiee'){
-        return true;
-    }
-    return false;
-}
-
+const isWookieeFormat = (req) => {
+	return req.query.format === "wookiee";
+};
 
 const applySwapiEndpoints = (server, app) => {
+	const service = app.services.swapiService;
+	server.get("/hfswapi/getPeople/:id", async (req, res, next) => {
+		try {
+			const idPathParam = req.params.id;
+			if (!idPathParam || idPathParam.length === 0) {
+				throw new BadRequestException(
+					"People id param were not present in request."
+				);
+			}
+			const result = await service.getPeopleById(idPathParam);
+			responseParserHandler(httpStatusCodesConstants.OK, result, res);
+		} catch (error) {
+			next(error);
+		}
+	});
+	server.get("/hfswapi/getPlanet/:id", async (req, res, next) => {
+		try {
+			const idPathParam = req.params.id;
+			if (!idPathParam || idPathParam.length === 0) {
+				throw new BadRequestException(
+					"Planet id param were not present in request."
+				);
+			}
+			const result = await service.getPlanetById(idPathParam);
+			responseParserHandler(httpStatusCodesConstants.OK, result, res);
+		} catch (error) {
+			next(error);
+		}
+	});
+	server.get("/hfswapi/getWeightOnPlanetRandom", async (req, res, next) => {
+		try {
+			const result = await service.getWeightOnPlanetRandom();
+			responseParserHandler(httpStatusCodesConstants.OK, result, res);
+		} catch (error) {
+			next(error);
+		}
+	});
 
-    server.get('/hfswapi/test', async (req, res) => {
-        const data = await app.swapiFunctions.genericRequest('https://swapi.dev/api/', 'GET', null, true);
-        res.send(data);
-    });
-
-    server.get('/hfswapi/getPeople/:id', async (req, res) => {
-        res.sendStatus(501);
-    });
-
-    server.get('/hfswapi/getPlanet/:id', async (req, res) => {
-        res.sendStatus(501);
-    });
-
-    server.get('/hfswapi/getWeightOnPlanetRandom', async (req, res) => {
-        res.sendStatus(501);
-    });
-
-    server.get('/hfswapi/getLogs',async (req, res) => {
-        const data = await app.db.logging.findAll();
-        res.send(data);
-    });
-
-}
+	server.get("/hfswapi/getLogs", async (req, res) => {
+		const data = await app.db.logging.findAll();
+		res.send(data);
+	});
+};
 
 module.exports = applySwapiEndpoints;

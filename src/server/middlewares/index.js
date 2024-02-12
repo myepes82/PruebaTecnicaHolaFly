@@ -1,8 +1,12 @@
+const errorHandlerMiddleware = require('./errorHandlerMiddleware');
 const loggingMiddleware = require('./loggingMiddleware');
+const requestStorageMiddleware = require('./requestStorageMiddleware');
 
-const applyMiddlwares = (server, app) => {
-    server.use(loggingMiddleware(app.db));
+const applyMiddlewares = (server, app) => {
+    server.use(loggingMiddleware);
+    server.use(requestStorageMiddleware)
+    server.use(errorHandlerMiddleware)
 	return server;
 };
 
-module.exports = applyMiddlwares;
+module.exports = applyMiddlewares;

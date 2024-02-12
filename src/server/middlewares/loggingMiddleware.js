@@ -1,10 +1,12 @@
-const loggingMiddleware = (db) =>
-    (req, res, next) => {
-        const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress || '').split(',')[0].trim();
-        const headers = JSON.stringify(req.headers);
-        const originalUrl = req.originalUrl;
-        // Persist this info on DB
-        next();
-    }
+const { logInfo } = require("sc_logger");
 
+function loggingMiddleware(req, _, next) {
+
+    const { method, headers, originalUrl, connection } = req
+
+    const ip = (headers['x-forwarded-for'] || connection.remoteAddress || '').split(',')[0].trim()
+
+    logInfo("[{}] - Call to {} from {}", method, originalUrl, ip)
+    next()
+}
 module.exports = loggingMiddleware;
