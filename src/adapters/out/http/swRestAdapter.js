@@ -1,9 +1,8 @@
-const { logDebug, logError } = require("sc_logger")
 const HttpRestAdapter = require("./httpRestAdapter")
-const CommonPeople = require("../../../domain/People/commonPeople")
+const CommonPeople = require("../../../domain/People/commonPeopleEntity")
 const { Planet } = require("../../../domain/Planet")
 
-class SwapiRestAdapter {
+class SwRestAdapter {
 
     swapiBaseURL = "https://swapi.dev/api"
 
@@ -12,7 +11,7 @@ class SwapiRestAdapter {
     constructor() {
         this.httpRestAdapter = new HttpRestAdapter({
             baseURL: this.swapiBaseURL,
-            timeout: 5000,
+            timeout: 10000,
             headers: {
                 "Content-Type": "application/json"
             }
@@ -33,4 +32,4 @@ class SwapiRestAdapter {
     }
 }
 
-module.exports = SwapiRestAdapter
+module.exports = SwRestAdapter

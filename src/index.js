@@ -1,9 +1,10 @@
 const bodyParser = require("body-parser");
-
+const { logDebug } = require("sc_logger");
 const createServer = require("./server");
 
 const app = require("./app");
-const { logDebug } = require("sc_logger");
+const { createClient } = require("redis");
+
 
 async function start() {
   const server = await createServer(app);

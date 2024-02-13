@@ -1,4 +1,4 @@
-class Planet {
+class PlanetEntity {
 
     constructor(id, name, gravity){
         this.id = id
@@ -19,4 +19,4 @@ class Planet {
     }
 }
 
-module.exports = Planet
+module.exports = PlanetEntity

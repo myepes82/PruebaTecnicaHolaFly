@@ -7,33 +7,14 @@ class HttpRestAdapter {
     requestManager
     config
 
-    constructor(config){
+    constructor(config) {
         const { baseURL, timeout, headers } = config
-        this.requestManager = new Axios({ 
-            baseURL, 
-            timeout, 
+        this.requestManager = new Axios({
+            baseURL,
+            timeout,
             headers
         })
         this.config = config
-    }
-
-    handleErrors(error) {
-        const { response, request } = error
-
-        logError("Error on HTTP Resquest: {}", error)
-        if (response) {
-            const { status , statusText } = response
-            
-            if(status === 400) {
-                throw new BadRequestException(statusText)
-            }else if(status === 404) {
-                throw new ResourceNotFoundException(statusText)
-            } else {
-                throw new InternalServerException(statusText)
-            }
-        }else if(request) {
-            throw new InternalServerException("No server response.")
-        }
     }
 
     async get(path) {
@@ -44,7 +25,23 @@ class HttpRestAdapter {
             logDebug("Get request result: {}", data)
             return JSON.parse(data)
         } catch (error) {
-            this.handleErrors(error)
+            const { response, request } = error
+
+            logError("Error on HTTP Request: {}", error)
+            if (response) {
+                const { status, statusText } = response
+
+                if (status === 400) {
+                    throw new BadRequestException(statusText)
+                } else if (status === 404) {
+                    throw new ResourceNotFoundException(statusText)
+                } else {
+                    throw new InternalServerException(statusText)
+                }
+            } else if (request) {
+                throw new InternalServerException("No server response.")
+            }
+            throw error
         }
     }
 

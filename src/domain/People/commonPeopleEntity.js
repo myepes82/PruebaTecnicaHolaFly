@@ -1,6 +1,6 @@
 const AbstractPeople = require("./abstractPeople");
 
-class CommonPeople extends AbstractPeople {
+class CommonPeopleEntity extends AbstractPeople {
     
     constructor(id, name, mass, height, homeWorldId, homeWorldName ){
         super(id)
@@ -25,4 +25,4 @@ class CommonPeople extends AbstractPeople {
 }
 
 
-module.exports = CommonPeople
+module.exports = CommonPeopleEntity

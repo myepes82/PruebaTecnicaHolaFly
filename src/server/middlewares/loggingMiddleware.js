@@ -1,12 +1,15 @@
-const { logInfo } = require("sc_logger");
+const LoggingEntity = require("../../domain/Logs/logEntity")
 
-function loggingMiddleware(req, _, next) {
+async function loggingMiddleware(req, _, next, app) {
+    try {
+        const { headers, originalUrl, connection } = req
 
-    const { method, headers, originalUrl, connection } = req
-
-    const ip = (headers['x-forwarded-for'] || connection.remoteAddress || '').split(',')[0].trim()
-
-    logInfo("[{}] - Call to {} from {}", method, originalUrl, ip)
-    next()
+        const ip = (headers['x-forwarded-for'] || connection.remoteAddress || '').split(',')[0].trim()
+        await app.services.swapiService.saveLog(new LoggingEntity(null, originalUrl, JSON.stringify(headers), ip))
+        next()
+    } catch (error) {
+        next(error)
+    }
 }
-module.exports = loggingMiddleware;
+
+module.exports = loggingMiddleware
