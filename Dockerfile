@@ -9,7 +9,7 @@ RUN npm install
 
 COPY . .
 
-RUN npx swc ./src -d dist  
+RUN npm run build
 
 EXPOSE 4567
 

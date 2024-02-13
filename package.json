@@ -17,6 +17,7 @@
   "description": "Prueba Técnica de Holafly",
   "main": "index.js",
   "scripts": {
+    "build": "npx swc ./src -d dist",
     "start": "node ./dist/src/index.js",
     "dev": "nodemon --watch ./src index.js"
   },
